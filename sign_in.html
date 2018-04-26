@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="z-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登陆</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            border: 1px solid red;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-wrapper {
+            border: 1px solid grey;
+            ;
+            padding: 16px;
+            min-width: 380px;
+        }
+
+        form .row {
+            margin: 10px 0;
+        }
+
+        .form-wrapper .row>label {
+            display: inline-block;
+            min-width: 4em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-wrapper">
+        <h2>登陆</h2>
+        <form id="singInForm">
+            <div class="row">
+                <label>邮箱</label>
+                <input type="text" name="email">
+                <span class="error"></span>
+            </div>
+            <div class="row">
+                <label>密码</label>
+                <input type="password" name="password">
+                <span class="error"></span>
+            </div>
+            
+            <div class="row">
+                <input type="submit" name="submit" value="登陆">
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        var $form = $('#singInForm')
+        let hash = {}
+        $form.on('submit', (e) => {
+            e.preventDefault()
+            let need = ['email', 'password']
+            need.forEach((name) => { //把name这个参数所代表的值传进去
+                let value = $form.find(`[name=${name}]`).val()
+                hash[name] = value
+            })//这一步是找出由每个name和它里面的值构成的对象
+            //相当于hash['email']=$form.find(`[name="email"]`).val()这样单独赋值
+            $form.find('.error').each((n, span) => {
+                $(span).text('')
+            })//使error的文字都消掉
+            if(hash['email'] === ''){
+                 $form.find(`[name="email"]`).siblings('.error').text('请填写邮箱')
+                 return
+            }else if(hash['password'] === ''){
+                 $form.find(`[name="password"]`).siblings('.error').text('请填写密码')
+                 return
+            }
+            //AJAX
+            $.post('/sign_in.html', hash)
+                .then((body) => {
+                    window.location.href = '/'
+                }, (request) => {
+                    alert('邮箱与密码不匹配')
+                })
+        })
+    </script>
+</body>
+
+</html>
