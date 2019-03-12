@@ -42,9 +42,9 @@ var server = http.createServer(function (request, response) {
         }
     }
     if(foundUser){
-      string = string.replace('__password__',foundUser.password)
+      string = string.replace('__userName__',foundUser.email)
     }else{
-      string = string.replace('__password__','不知道')      
+      string = string.replace('__userName__','不知道')      
     }
     response.statusCode = 200
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
@@ -105,7 +105,7 @@ var server = http.createServer(function (request, response) {
             }  
           }`)
         } else {
-          users.push({ email: email, password: password })//push进去对象,实际开发中不能直接这样存密码
+          users.push({ email, password })//push进去对象,实际开发中不能直接这样存密码
           var usersString = JSON.stringify(users)//将一个JavaScript值(对象或者数组)转换为一个 JSON字符串
           fs.writeFileSync('./db/users', usersString)//不能以对象或数组形式存储，对象是内存里的东西
           response.statusCode = 200
@@ -136,19 +136,40 @@ var server = http.createServer(function (request, response) {
         users = JSON.parse(users)
       } catch (exception) {
         users = []
-      }   
+      }  
       let found = false
+      let match = false
       for (let i = 0; i < users.length; i++) {
+        
         if (users[i].email === email && users[i].password === password) {
           found = true
+          match = true
           break  //一定要跳出遍历或者自己遍历完再去验证有没有找到匹配的邮箱密码，如果在循环中验证，会每一组邮箱返回一个状态码     
+        }else if(users[i].email === email && users[i].password !== password){
+           found = true
+           match = false
+           break
         }
       }
-      if (found) {
+      if (found && match) {
         response.statusCode = 200
         response.setHeader('Set-Cookie',`sign_in_email=${email};HttpOnly`)
-      } else {
-        response.statusCode = 401  //401认证失败       
+      } else if(found && !match){
+        response.setHeader('Content-Type', 'application/json;charset=utf-8')
+          response.statusCode = 400  //这个状态码会显示在前端   
+          response.write(`{
+            "error":{
+              "password":"password wrong"
+            }  
+          }`) 
+      }else{
+        response.setHeader('Content-Type', 'application/json;charset=utf-8')
+        response.statusCode = 400      
+        response.write(`{
+          "error":{
+            "email":"email not in use"
+          }  
+        }`)   
       }
       response.end()
     })

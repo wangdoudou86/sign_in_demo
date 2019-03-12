@@ -8,24 +8,57 @@
     <style>
         *{margin:0;padding:0;}
         *{box-sizing: border-box;}
+        a{
+           text-decoration: none; 
+           color:black;
+        }
         body{
-            border: 1px solid red;
             min-height:100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         .form-wrapper{
-            border: 1px solid grey;;
+            border: 1px solid rgb(224, 215, 215);
             padding:16px;
             min-width: 380px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 2px rgba(219,212,219,1);
+            
         }
         form .row{
             margin:10px 0;
         }
+        .row input[type="submit"]{
+            width:50px;
+            height:30px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size:14px;
+        }
         .form-wrapper .row>label{
             display: inline-block;
             min-width: 4em;
+        }
+        .signUpWrap{
+            position: fixed;
+            top:20px;
+            right:20px;
+        }
+        .signUp{
+            border:1px solid grey;
+            border-radius: 5px;
+            width:60px;
+            height:40px;
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+        }
+        .signUp:hover{
+           background:rgb(224, 215, 215);
+           border:none;
+           transition:all 0.5s;
         }
         
     </style>
@@ -37,23 +70,34 @@
         <form id="singUpForm">
             <div class="row">
                 <label>邮箱</label>
-                <input type="text" name="email">
+                <input type="text" name="email" placeholder="请输入邮箱" 
+                onfocus="if(this.placeholder=='请输入邮箱')this.placeholder=''"
+                onblur="if(this.placeholder=='')this.placeholder='请输入邮箱'">
                 <span class="error"></span>
             </div>
             <div class="row">
                 <label>密码</label>
-                <input type="password" name="password">
+                <input type="password" name="password" placeholder="请输入密码" 
+                onfocus="if(this.placeholder=='请输入密码')this.placeholder=''"
+                onblur="if(this.placeholder=='')this.placeholder='请输入密码'">
                 <span class="error"></span>
             </div>
             <div class="row">
                 <label>确认密码</label>
-                <input type="password" name="password_confirmation">
+                <input type="password" name="password_confirmation" placeholder="请确认密码" 
+                onfocus="if(this.placeholder=='请确认密码')this.placeholder=''"
+                onblur="if(this.placeholder=='')this.placeholder='请确认密码'">
                 <span class="error"></span>
             </div>
             <div class="row">               
                 <input type="submit" name="submit" value="注册">
             </div>
         </form>
+    </div>
+    <div class="signUpWrap">
+        <div class="signUp">
+            <a href="./sign_in.html">登录</a>
+        </div>
     </div>
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <script>
@@ -69,7 +113,7 @@
             //相当于hash['email']=$form.find(`[name="email"]`).val()这样单独赋值
             $form.find('.error').each((n,span)=>{
                 $(span).text('')
-            })//使error的文字都消掉
+            })
             if(hash['email'] === ''){
                  $form.find(`[name="email"]`).siblings('.error').text('请填写邮箱')
                  return
@@ -88,8 +132,8 @@
             .then((body)=>{
                 alert('注册成功')
                 window.location.href = '/sign_in.html' //注册成功转到登陆页面
-            },(request)=>{
-                let {error} = request.responseJSON
+            },(response)=>{
+                let {error} = response.responseJSON
                 //es6的结构赋值，让error的key对应request.responseJSON的key
                 //error={"emali":"invalid"}
                 if(error.email && error.email === 'invalid'){

@@ -3,8 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title></title>
+  <style>
+    a{
+      text-decoration: none;
+      color:black;
+    }
+  .quitWrap{
+    position: fixed;
+    top:20px;
+    right:20px;
+  }
+  .quit{
+    border:1px solid grey;
+    border-radius: 5px;
+    width:60px;
+    height:40px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+  }
+  </style>
 </head>
 <body>
-  <h1>你的密码是：__password__</h1>
+  <h1>你的用户名是：__userName__</h1>
+  <div class="quitWrap">
+      <div class="quit">
+          <a href="./sign_up.html">退出</a>
+      </div>
+  </div>
 </body>
 </html>
