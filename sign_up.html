@@ -110,7 +110,6 @@
                 let value = $form.find(`[name=${name}]`).val()
                 hash[name] = value
             })//这一步是找出由每个name和它里面的值构成的对象
-            //相当于hash['email']=$form.find(`[name="email"]`).val()这样单独赋值
             $form.find('.error').each((n,span)=>{
                 $(span).text('')
             })
