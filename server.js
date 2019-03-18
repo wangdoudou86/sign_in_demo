@@ -174,27 +174,6 @@ var server = http.createServer(function (request, response) {
       response.end()
     })
 
-  } else if (path === '/main.js') { //http路径必须是绝对路径
-    let string = fs.readFileSync('./main.js', 'utf8')
-    response.statusCode = 200
-    response.setHeader('Content-Type', 'text/javascript;charset=utf-8')
-    response.write(string)
-    response.end()
-  } else if (path === '/xxx') {
-    response.statusCode = 200
-    response.setHeader('Content-Type', 'text/json;charset=utf-8')
-    response.setHeader('Access-Control-Allow-Origin', 'http://doudou.com:8001')
-    response.write(`
-    {
-      "note":{
-        "to": "小谷",
-        "from": "方方",
-        "heading": "打招呼",
-        "content": "hi"
-      }
-    }
-    `)
-    response.end()
   } else {
     response.statusCode = 404
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
